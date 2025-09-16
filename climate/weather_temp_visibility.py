@@ -5,7 +5,7 @@ import seaborn as sns
 import os
 from scipy import stats
 
-# 解决matplotlib中文显示问题
+# matplotlib中文显示
 plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
 plt.rcParams['axes.unicode_minus'] = False
 
@@ -31,7 +31,7 @@ def load_data(file_path):
 
 def classify_weather_by_conditions(conditions_str):
     """
-    根据用户指定的精确条件对天气进行分类
+    根据指定的精确条件对天气进行分类
     """
     if not isinstance(conditions_str, str):
         return 'Other'
@@ -184,7 +184,7 @@ def main():
     df_green = load_data(GREEN_MERGED_PATH)
     df_fhv = load_data(FHV_MERGED_PATH)
 
-    # 对每个数据集分别进行分析，并传入正确的上车时间字段名
+    # 对每个数据集分别进行分析
     analyze_weather_impact(df_yellow, 'Yellow Taxi', 'tpep_pickup_datetime')
     analyze_weather_impact(df_green, 'Green Taxi', 'lpep_pickup_datetime')
     analyze_weather_impact(df_fhv, 'FHV', 'pickup_datetime')
