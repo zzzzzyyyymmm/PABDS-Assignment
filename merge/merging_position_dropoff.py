@@ -316,7 +316,7 @@ def main():
     if 'gdf_fused' in locals() and gdf_fused is not None:
         analyze_dropoff_poi_types(gdf_fused)
 
-    print("\n代码运行结束。数据已成功融合，你可以继续进行更深入的分析和可视化。")
+    print("\n代码运行结束。数据已成功融合，可以继续进行更深入的分析和可视化。")
 
 
 if __name__ == "__main__":
