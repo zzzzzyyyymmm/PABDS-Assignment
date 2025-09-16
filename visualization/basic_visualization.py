@@ -58,12 +58,11 @@ def analyze_single_service(service_name, file_path):
 
     # --- 服務畫像分析 (Service Profile) ---
     print(f"  > 進行服務畫像分析...")
-    # 這裡我們只在 dropoff_datetime 存在時才計算 trip_duration_minutes
     if 'dropoff_datetime' in df.columns:
         df['trip_duration_minutes'] = (pd.to_datetime(df['dropoff_datetime']) - df[
             'pickup_datetime']).dt.total_seconds() / 60
     else:
-        df['trip_duration_minutes'] = None  # 或者你可以選擇一個默認值，例如 0
+        df['trip_duration_minutes'] = None
 
     profile = {
         'service': service_name,
@@ -86,9 +85,8 @@ def plot_temporal_dynamics(all_hourly_data):
     print("\n生成每小時動態圖...")
     fig = go.Figure()
 
-    # 確保按照特定的順序繪製，以便疊加圖層（如果需要）
-    # 這裡對於線圖，順序不是關鍵，但統一處理會更好
-    for service_name in ['yellow', 'fhv', 'green']:  # 例如，讓Green最後繪製，確保其線條可見
+    # 按照特定的順序繪製
+    for service_name in ['yellow', 'fhv', 'green']:
         if service_name in all_hourly_data:
             df = all_hourly_data[service_name]
             fig.add_trace(go.Scatter(
@@ -107,7 +105,7 @@ def plot_temporal_dynamics(all_hourly_data):
         hovermode='x unified'  # 懸停時顯示所有數據點資訊
     )
 
-    fig.write_html("temporal_dynamics_hourly.html")  # 檔名區分一下
+    fig.write_html("temporal_dynamics_hourly.html")
     fig.show()
     print("每小時動態圖表已生成，請在瀏覽器中查看。")
     print(f"檔案位置: {os.path.join(os.getcwd(), 'temporal_dynamics_hourly.html')}")
@@ -123,8 +121,6 @@ def plot_weekly_dynamics(all_weekly_data):
     # 定義週幾標籤
     weekday_labels = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
 
-    # 為了讓數量較少的 Green 服務在堆疊柱狀圖中可見，我們將其最後添加
-    # 這樣它的柱子會在最頂層
     sorted_services = ['yellow', 'fhv', 'green']
 
     for service_name in sorted_services:
@@ -145,11 +141,11 @@ def plot_weekly_dynamics(all_weekly_data):
         title='各服務模式每週每日訂單量動態對比',
         xaxis_title='週幾 (Weekday)',
         yaxis_title='訂單量 (Trip Count)',
-        barmode='stack',  # 將柱狀圖改為堆疊模式，讓小數量的Green也能看見
+        barmode='stack',  # 將柱狀圖改為堆疊模式
         hovermode='x unified'  # 懸停時顯示所有數據點資訊
     )
 
-    fig.write_html("temporal_dynamics_weekly.html")  # 檔名區分一下
+    fig.write_html("temporal_dynamics_weekly.html")
     fig.show()
     print("每週動態圖表已生成，請在瀏覽器中查看。")
     print(f"檔案位置: {os.path.join(os.getcwd(), 'temporal_dynamics_weekly.html')}")
