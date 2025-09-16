@@ -4,7 +4,7 @@ from shapely.geometry import Point
 import os
 import numpy as np
 
-# 定义文件路径，请根据你的实际情况修改
+# 定义文件路径
 taxi_data_path = 'green_tripdata_2024-12_cleaned.parquet'
 taxi_zones_path = 'taxi_zones/taxi_zones.shp'
 osm_map_path = 'new-york-250907-free/gis_osm_pois_free_1.shp'
@@ -316,7 +316,7 @@ def main():
     if 'gdf_fused' in locals() and gdf_fused is not None:
         analyze_pickup_poi_types(gdf_fused)
 
-    print("\n代码运行结束。数据已成功融合，你可以继续进行更深入的分析和可视化。")
+    print("\n代码运行结束。数据已成功融合，可以继续进行更深入的分析和可视化。")
 
 
 if __name__ == "__main__":
