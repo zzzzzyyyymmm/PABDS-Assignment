@@ -128,7 +128,7 @@ def main():
     df_yellow = load_data(YELLOW_MERGED_PATH)
     df_green = load_data(GREEN_MERGED_PATH)
 
-    # 对每个数据集分别进行分析，并传入正确的上车和下车时间字段名
+    # 对每个数据集分别进行分析
     analyze_weather_impact(df_yellow, 'Yellow Taxi', 'tpep_pickup_datetime', 'tpep_dropoff_datetime')
     analyze_weather_impact(df_green, 'Green Taxi', 'lpep_pickup_datetime', 'lpep_dropoff_datetime')
 
