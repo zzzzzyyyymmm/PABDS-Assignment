@@ -42,7 +42,7 @@ def create_interactive_geographic_map(df):
             mode='markers',
             marker=go.scattermapbox.Marker(
                 size=8,
-                color=colors[i % len(colors)]  # 循环使用 Vivid 配色方案
+                color=colors[i % len(colors)]
             ),
             hovertext=df_category['name'],
             hoverinfo='text+lat+lon',
@@ -70,14 +70,14 @@ def create_interactive_geographic_map(df):
             args=[{"visible": visibility}],
         ))
 
-    # 更新地图布局，添加下拉菜单
+    # 地图布局，添加下拉菜单
     fig.update_layout(
         mapbox_style="carto-positron",
         title='POI 类别地理分布与出租车上车点关系图',
         mapbox_zoom=10,
         mapbox_center={"lat": 40.7, "lon": -74.0},
         margin={"r": 0, "t": 40, "l": 0, "b": 0},
-        showlegend=False,  # 隐藏图例，因为我们改用下拉菜单
+        showlegend=False,
         updatemenus=[go.layout.Updatemenu(
             type="dropdown",
             direction="down",
