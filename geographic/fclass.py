@@ -4,7 +4,7 @@ import numpy as np
 import geopandas as gpd
 import os
 
-# --- 定义文件路径，请根据你的实际情况修改 ---
+# 定义文件路径
 osm_map_path = 'new-york-250907-free/gis_osm_pois_free_1.shp'
 output_file_path = 'all_fclass_types.txt'
 
