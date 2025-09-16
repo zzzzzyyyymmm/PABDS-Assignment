@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 
-# 定义数据文件路径，请将你的数据文件放在相应的路径下
+# 定义数据文件路径
 YELLOW_TAXI_PATH = 'yellow_tripdata_2024-12_cleaned.parquet'
 GREEN_TAXI_PATH = 'green_tripdata_2024-12_cleaned.parquet'
 FHV_TAXI_PATH = 'fhv_tripdata_2024-12_cleaned.parquet'
