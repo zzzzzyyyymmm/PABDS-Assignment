@@ -133,7 +133,7 @@ def main():
     df_green = load_data(GREEN_MERGED_PATH)
     df_fhv = load_data(FHV_MERGED_PATH)
 
-    # 对每个数据集分别进行分析，并传入正确的上车时间字段名
+    # 对每个数据集分别进行分析
     analyze_weather_and_time_interaction(df_yellow, 'Yellow Taxi', 'tpep_pickup_datetime')
     analyze_weather_and_time_interaction(df_green, 'Green Taxi', 'lpep_pickup_datetime')
     analyze_weather_and_time_interaction(df_fhv, 'FHV', 'pickup_datetime')
