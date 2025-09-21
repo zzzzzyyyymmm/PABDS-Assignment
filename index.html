@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>出租车收入与行程预测应用</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+        <!-- 主标题 -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800">🚕 出租车收入与行程预测</h1>
+            <p class="text-lg text-gray-600 mt-2">基于机器学习模型，为乘客和司机提供智能预测和建议。</p>
+        </header>
+
+        <!-- 乘客查询模块 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+            <h2 class="text-2xl font-semibold text-indigo-600 mb-4 border-b-2 border-indigo-200 pb-2">乘客查询</h2>
+            <form action="/" method="post" class="space-y-4" onsubmit="showLoading('passenger-loading')">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- 时间段 -->
+                    <div>
+                        <label for="time_period" class="block text-sm font-medium text-gray-700">时间段</label>
+                        <select name="time_period" id="time_period" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="工作日早高峰">工作日早高峰</option>
+                            <option value="工作日晚高峰">工作日晚高峰</option>
+                            <option value="工作日其他">工作日其他</option>
+                            <option value="周末">周末</option>
+                        </select>
+                    </div>
+
+                    <!-- 接客地POI -->
+                    <div>
+                        <label for="pickup_category" class="block text-sm font-medium text-gray-700">接客地兴趣点 (POI)</label>
+                        <select name="pickup_category" id="pickup_category" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="交通">交通</option>
+                            <option value="食品">食品</option>
+                            <option value="购物">购物</option>
+                            <option value="生活服务">生活服务</option>
+                            <option value="医疗">医疗</option>
+                            <option value="文娱">文娱</option>
+                            <option value="教育">教育</option>
+                            <option value="住宿">住宿</option>
+                            <option value="旅游景点">旅游景点</option>
+                            <option value="基础设施">基础设施</option>
+                        </select>
+                    </div>
+
+                    <!-- 下车地POI -->
+                    <div>
+                        <label for="dropoff_category" class="block text-sm font-medium text-gray-700">下车地兴趣点 (POI)</label>
+                        <select name="dropoff_category" id="dropoff_category" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="交通">交通</option>
+                            <option value="食品">食品</option>
+                            <option value="购物">购物</option>
+                            <option value="生活服务">生活服务</option>
+                            <option value="医疗">医疗</option>
+                            <option value="文娱">文娱</option>
+                            <option value="教育">教育</option>
+                            <option value="住宿">住宿</option>
+                            <option value="旅游景点">旅游景点</option>
+                            <option value="基础设施">基础设施</option>
+                        </select>
+                    </div>
+
+                    <!-- 付款类型 -->
+                    <div>
+                        <label for="payment_type" class="block text-sm font-medium text-gray-700">付款类型</label>
+                        <select name="payment_type" id="payment_type" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="信用卡">信用卡</option>
+                            <option value="现金">现金</option>
+                            <option value="无费用">无费用</option>
+                            <option value="争议">争议</option>
+                        </select>
+                    </div>
+
+                    <!-- 乘客人数 -->
+                    <div>
+                        <label for="passenger_count" class="block text-sm font-medium text-gray-700">乘客人数</label>
+                        <input type="number" name="passenger_count" id="passenger_count" value="1" min="1" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+
+                    <!-- 天气特征 (简易输入) -->
+                    <div>
+                        <label for="precipitation" class="block text-sm font-medium text-gray-700">降水 (mm)</label>
+                        <input type="number" name="precipitation" id="precipitation" value="0.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="thermal_comfort" class="block text-sm font-medium text-gray-700">体感温度 (°C)</label>
+                        <input type="number" name="thermal_comfort" id="thermal_comfort" value="20.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="solar_radiation" class="block text-sm font-medium text-gray-700">太阳辐射 (W/m²)</label>
+                        <input type="number" name="solar_radiation" id="solar_radiation" value="100.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="wind_dynamics" class="block text-sm font-medium text-gray-700">风力 (m/s)</label>
+                        <input type="number" name="wind_dynamics" id="wind_dynamics" value="5.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="snow_accumulation" class="block text-sm font-medium text-gray-700">积雪 (cm)</label>
+                        <input type="number" name="snow_accumulation" id="snow_accumulation" value="0.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" name="passenger_submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        预测行程
+                    </button>
+                </div>
+            </form>
+            <div id="passenger-loading" class="mt-4 text-center hidden">
+                <div class="animate-spin inline-block w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full"></div>
+            </div>
+            <div class="mt-4 text-gray-800 whitespace-pre-wrap">
+                <!-- 结果由Flask渲染 -->
+                {% if passenger_result %}
+                    <p class="font-bold text-green-600 mt-2">预测结果:</p>
+                    <pre class="bg-gray-100 p-4 rounded-md mt-2">{{ passenger_result }}</pre>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 司机查询模块 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+            <h2 class="text-2xl font-semibold text-rose-600 mb-4 border-b-2 border-rose-200 pb-2">司机查询</h2>
+            <div class="mb-4 text-gray-600">
+                <p>当前定位: {{ driver_coords }}</p>
+                <p>该功能将根据你的当前位置和天气，预测前往不同POI类型区域时获得高小费/高收入的可能性，为你推荐最佳去向。</p>
+            </div>
+            <form action="/" method="post" class="space-y-4" onsubmit="showLoading('driver-loading')">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- 时间段 -->
+                    <div>
+                        <label for="driver_time_period" class="block text-sm font-medium text-gray-700">时间段</label>
+                        <select name="driver_time_period" id="driver_time_period" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                            <option value="工作日早高峰">工作日早高峰</option>
+                            <option value="工作日晚高峰">工作日晚高峰</option>
+                            <option value="工作日其他">工作日其他</option>
+                            <option value="周末">周末</option>
+                        </select>
+                    </div>
+
+                    <!-- 天气特征 (简易输入) -->
+                    <div>
+                        <label for="driver_precipitation" class="block text-sm font-medium text-gray-700">降水 (mm)</label>
+                        <input type="number" name="driver_precipitation" id="driver_precipitation" value="0.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                    </div>
+                    <div>
+                        <label for="driver_thermal_comfort" class="block text-sm font-medium text-gray-700">体感温度 (°C)</label>
+                        <input type="number" name="driver_thermal_comfort" id="driver_thermal_comfort" value="20.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                    </div>
+                    <div>
+                        <label for="driver_solar_radiation" class="block text-sm font-medium text-gray-700">太阳辐射 (W/m²)</label>
+                        <input type="number" name="driver_solar_radiation" id="driver_solar_radiation" value="100.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                    </div>
+                    <div>
+                        <label for="driver_wind_dynamics" class="block text-sm font-medium text-gray-700">风力 (m/s)</label>
+                        <input type="number" name="driver_wind_dynamics" id="driver_wind_dynamics" value="5.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                    </div>
+                    <div>
+                        <label for="driver_snow_accumulation" class="block text-sm font-medium text-gray-700">积雪 (cm)</label>
+                        <input type="number" name="driver_snow_accumulation" id="driver_snow_accumulation" value="0.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" name="driver_submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+                        获取目的地推荐
+                    </button>
+                </div>
+            </form>
+            <div id="driver-loading" class="mt-4 text-center hidden">
+                <div class="animate-spin inline-block w-8 h-8 border-4 border-rose-500 border-t-transparent rounded-full"></div>
+            </div>
+            <div class="mt-4 text-gray-800 whitespace-pre-wrap">
+                <!-- 结果由Flask渲染 -->
+                {% if driver_result %}
+                    <p class="font-bold text-green-600 mt-2">推荐结果:</p>
+                    <pre class="bg-gray-100 p-4 rounded-md mt-2">{{ driver_result }}</pre>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showLoading(elementId) {
+            document.getElementById(elementId).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
