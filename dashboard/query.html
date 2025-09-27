@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">出租车收入与行程预测应用</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800" data-lang-key="mainTitle">🚕 出租车收入与行程预测</h1>
+            <p class="text-lg text-gray-600 mt-2" data-lang-key="mainSubtitle">基于机器学习模型，为乘客和司机提供智能预测和建议。</p>
+        </header>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+            <h2 class="text-2xl font-semibold text-indigo-600 mb-4 border-b-2 border-indigo-200 pb-2" data-lang-key="passengerSection">乘客查询</h2>
+            <form action="/" method="post" class="space-y-4" onsubmit="showLoading('passenger-loading')">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label for="time_period" class="block text-sm font-medium text-gray-700" data-lang-key="timePeriod">时间段</label>
+                        <select name="time_period" id="time_period" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="工作日早高峰" data-lang-key="timePeriodOption1">工作日早高峰</option>
+                            <option value="工作日晚高峰" data-lang-key="timePeriodOption2">工作日晚高峰</option>
+                            <option value="工作日其他" data-lang-key="timePeriodOption3">工作日其他</option>
+                            <option value="周末" data-lang-key="timePeriodOption4">周末</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="pickup_category" class="block text-sm font-medium text-gray-700" data-lang-key="poiPickup">接客地兴趣点 (POI)</label>
+                        <select name="pickup_category" id="pickup_category" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="交通" data-lang-key="poiOption1">交通</option>
+                            <option value="食品" data-lang-key="poiOption2">食品</option>
+                            <option value="购物" data-lang-key="poiOption3">购物</option>
+                            <option value="生活服务" data-lang-key="poiOption4">生活服务</option>
+                            <option value="医疗" data-lang-key="poiOption5">医疗</option>
+                            <option value="文娱" data-lang-key="poiOption6">文娱</option>
+                            <option value="教育" data-lang-key="poiOption7">教育</option>
+                            <option value="住宿" data-lang-key="poiOption8">住宿</option>
+                            <option value="旅游景点" data-lang-key="poiOption9">旅游景点</option>
+                            <option value="基础设施" data-lang-key="poiOption10">基础设施</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="dropoff_category" class="block text-sm font-medium text-gray-700" data-lang-key="poiDropoff">下车地兴趣点 (POI)</label>
+                        <select name="dropoff_category" id="dropoff_category" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="交通" data-lang-key="poiOption1">交通</option>
+                            <option value="食品" data-lang-key="poiOption2">食品</option>
+                            <option value="购物" data-lang-key="poiOption3">购物</option>
+                            <option value="生活服务" data-lang-key="poiOption4">生活服务</option>
+                            <option value="医疗" data-lang-key="poiOption5">医疗</option>
+                            <option value="文娱" data-lang-key="poiOption6">文娱</option>
+                            <option value="教育" data-lang-key="poiOption7">教育</option>
+                            <option value="住宿" data-lang-key="poiOption8">住宿</option>
+                            <option value="旅游景点" data-lang-key="poiOption9">旅游景点</option>
+                            <option value="基础设施" data-lang-key="poiOption10">基础设施</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="payment_type" class="block text-sm font-medium text-gray-700" data-lang-key="paymentType">付款类型</label>
+                        <select name="payment_type" id="payment_type" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="信用卡" data-lang-key="paymentOption1">信用卡</option>
+                            <option value="现金" data-lang-key="paymentOption2">现金</option>
+                            <option value="无费用" data-lang-key="paymentOption3">无费用</option>
+                            <option value="争议" data-lang-key="paymentOption4">争议</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="passenger_count" class="block text-sm font-medium text-gray-700" data-lang-key="passengerCount">乘客人数</label>
+                        <input type="number" name="passenger_count" id="passenger_count" value="1" min="1" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+
+                    <div>
+                        <label for="precipitation" class="block text-sm font-medium text-gray-700" data-lang-key="precipitation">降水 (mm)</label>
+                        <input type="number" name="precipitation" id="precipitation" value="0.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="thermal_comfort" class="block text-sm font-medium text-gray-700" data-lang-key="thermalComfort">体感温度 (°C)</label>
+                        <input type="number" name="thermal_comfort" id="thermal_comfort" value="20.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="solar_radiation" class="block text-sm font-medium text-gray-700" data-lang-key="solarRadiation">太阳辐射 (W/m²)</label>
+                        <input type="number" name="solar_radiation" id="solar_radiation" value="100.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="wind_dynamics" class="block text-sm font-medium text-gray-700" data-lang-key="windDynamics">风力 (m/s)</label>
+                        <input type="number" name="wind_dynamics" id="wind_dynamics" value="5.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="snow_accumulation" class="block text-sm font-medium text-gray-700" data-lang-key="snowAccumulation">积雪 (cm)</label>
+                        <input type="number" name="snow_accumulation" id="snow_accumulation" value="0.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" name="passenger_submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" data-lang-key="passengerButton">
+                        预测行程
+                    </button>
+                </div>
+            </form>
+            <div id="passenger-loading" class="mt-4 text-center hidden">
+                <div class="animate-spin inline-block w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full"></div>
+            </div>
+            <div class="mt-4 text-gray-800 whitespace-pre-wrap">
+                {% if passenger_result %}
+                    <p class="font-bold text-green-600 mt-2" data-lang-key="passengerResultTitle">预测结果:</p>
+                    <pre class="bg-gray-100 p-4 rounded-md mt-2">{{ passenger_result }}</pre>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+            <h2 class="text-2xl font-semibold text-rose-600 mb-4 border-b-2 border-rose-200 pb-2" data-lang-key="driverSection">司机查询</h2>
+            <div class="mb-4 text-gray-600">
+                <p data-lang-key="driverCurrentLocation">当前定位: {{ driver_coords }}</p>
+                <p data-lang-key="driverDescription">该功能将根据你的当前位置和天气，预测前往不同POI类型区域时获得高小费/高收入的可能性，为你推荐最佳去向。</p>
+            </div>
+            <form action="/" method="post" class="space-y-4" onsubmit="showLoading('driver-loading')">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label for="driver_time_period" class="block text-sm font-medium text-gray-700" data-lang-key="timePeriod">时间段</label>
+                        <select name="driver_time_period" id="driver_time_period" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                            <option value="工作日早高峰" data-lang-key="timePeriodOption1">工作日早高峰</option>
+                            <option value="工作日晚高峰" data-lang-key="timePeriodOption2">工作日晚高峰</option>
+                            <option value="工作日其他" data-lang-key="timePeriodOption3">工作日其他</option>
+                            <option value="周末" data-lang-key="timePeriodOption4">周末</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="driver_precipitation" class="block text-sm font-medium text-gray-700" data-lang-key="precipitation">降水 (mm)</label>
+                        <input type="number" name="driver_precipitation" id="driver_precipitation" value="0.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                    </div>
+                    <div>
+                        <label for="driver_thermal_comfort" class="block text-sm font-medium text-gray-700" data-lang-key="thermalComfort">体感温度 (°C)</label>
+                        <input type="number" name="driver_thermal_comfort" id="driver_thermal_comfort" value="20.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                    </div>
+                    <div>
+                        <label for="driver_solar_radiation" class="block text-sm font-medium text-gray-700" data-lang-key="solarRadiation">太阳辐射 (W/m²)</label>
+                        <input type="number" name="driver_solar_radiation" id="driver_solar_radiation" value="100.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                    </div>
+                    <div>
+                        <label for="driver_wind_dynamics" class="block text-sm font-medium text-gray-700" data-lang-key="windDynamics">风力 (m/s)</label>
+                        <input type="number" name="driver_wind_dynamics" id="driver_wind_dynamics" value="5.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                    </div>
+                    <div>
+                        <label for="driver_snow_accumulation" class="block text-sm font-medium text-gray-700" data-lang-key="snowAccumulation">积雪 (cm)</label>
+                        <input type="number" name="driver_snow_accumulation" id="driver_snow_accumulation" value="0.0" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500">
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" name="driver_submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500" data-lang-key="driverButton">
+                        获取目的地推荐
+                    </button>
+                </div>
+            </form>
+            <div id="driver-loading" class="mt-4 text-center hidden">
+                <div class="animate-spin inline-block w-8 h-8 border-4 border-rose-500 border-t-transparent rounded-full"></div>
+            </div>
+            <div class="mt-4 text-gray-800 whitespace-pre-wrap">
+                {% if driver_result %}
+                    <p class="font-bold text-green-600 mt-2" data-lang-key="driverResultTitle">推荐结果:</p>
+                    <pre class="bg-gray-100 p-4 rounded-md mt-2">{{ driver_result }}</pre>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showLoading(elementId) {
+            document.getElementById(elementId).classList.remove('hidden');
+        }
+
+        // 語言翻譯字典
+        const queryTranslations = {
+            'zh-TW': {
+                pageTitle: '計程車收入與行程預測應用',
+                mainTitle: '🚕 計程車收入與行程預測',
+                mainSubtitle: '基於機器學習模型，為乘客和司機提供智能預測和建議。',
+                passengerSection: '乘客查詢',
+                driverSection: '司機查詢',
+                // Common Labels & Select Options
+                timePeriod: '時間段', timePeriodOption1: '工作日早高峰', timePeriodOption2: '工作日晚高峰', timePeriodOption3: '工作日其他', timePeriodOption4: '週末',
+                poiPickup: '接客地興趣點 (POI)', poiDropoff: '下車地興趣點 (POI)',
+                poiOption1: '交通', poiOption2: '食品', poiOption3: '購物', poiOption4: '生活服務', poiOption5: '醫療', poiOption6: '文娛', poiOption7: '教育', poiOption8: '住宿', poiOption9: '旅遊景點', poiOption10: '基礎設施',
+                paymentType: '付款類型', paymentOption1: '信用卡', paymentOption2: '現金', paymentOption3: '無費用', paymentOption4: '爭議',
+                passengerCount: '乘客人數',
+                precipitation: '降水 (mm)', thermalComfort: '體感溫度 (°C)', solarRadiation: '太陽輻射 (W/m²)', windDynamics: '風力 (m/s)', snowAccumulation: '積雪 (cm)',
+                // Passenger specific
+                passengerButton: '預測行程', passengerResultTitle: '預測結果:',
+                // Driver specific
+                driverCurrentLocation: '當前定位:',
+                driverDescription: '該功能將根據你的當前位置和天氣，預測前往不同POI類型區域時獲得高小費/高收入的可能性，為你推薦最佳去向。',
+                driverButton: '獲取目的地推薦', driverResultTitle: '推薦結果:',
+            },
+            'zh-CN': {
+                pageTitle: '出租车收入与行程预测应用',
+                mainTitle: '🚕 出租车收入与行程预测',
+                mainSubtitle: '基于机器学习模型，为乘客和司机提供智能预测和建议。',
+                passengerSection: '乘客查询',
+                driverSection: '司机查询',
+                // Common Labels & Select Options
+                timePeriod: '时间段', timePeriodOption1: '工作日早高峰', timePeriodOption2: '工作日晚高峰', timePeriodOption3: '工作日其他', timePeriodOption4: '周末',
+                poiPickup: '接客地兴趣点 (POI)', poiDropoff: '下车地兴趣点 (POI)',
+                poiOption1: '交通', poiOption2: '食品', poiOption3: '购物', poiOption4: '生活服务', poiOption5: '医疗', poiOption6: '文娱', poiOption7: '教育', poiOption8: '住宿', poiOption9: '旅游景点', poiOption10: '基础设施',
+                paymentType: '付款类型', paymentOption1: '信用卡', paymentOption2: '现金', paymentOption3: '无费用', paymentOption4: '争议',
+                passengerCount: '乘客人数',
+                precipitation: '降水 (mm)', thermalComfort: '体感温度 (°C)', solarRadiation: '太阳辐射 (W/m²)', windDynamics: '风力 (m/s)', snowAccumulation: '积雪 (cm)',
+                // Passenger specific
+                passengerButton: '预测行程', passengerResultTitle: '预测结果:',
+                // Driver specific
+                driverCurrentLocation: '当前定位:',
+                driverDescription: '该功能将根据你的当前位置和天气，预测前往不同POI类型区域时获得高小费/高收入的可能性，为你推荐最佳去向。',
+                driverButton: '获取目的地推荐', driverResultTitle: '推荐结果:',
+            }
+        };
+
+        function switchLanguage(lang) {
+            const langPack = queryTranslations[lang];
+            if (!langPack) return;
+
+            document.title = langPack['pageTitle'];
+
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (langPack[key]) {
+                    // 針對按鈕和選項元素使用 textContent
+                    if (element.tagName === 'BUTTON' || element.tagName === 'OPTION') {
+                        element.textContent = langPack[key];
+                    } else if (element.tagName !== 'INPUT' && element.tagName !== 'TEXTAREA') {
+                        // 針對其他元素 (如 h1, p, label)
+                        element.innerText = langPack[key];
+                    }
+                }
+            });
+        }
+        
+        // 監聽來自父層 (index.html) 的語言切換訊息
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'languageChange' && event.data.lang) {
+                switchLanguage(event.data.lang);
+            }
+        }, false);
+        
+        // 首次載入時，預設使用繁體中文
+        document.addEventListener('DOMContentLoaded', () => { 
+            // 由於 index.html 預設是 zh-TW，這裡先手動切換到繁體
+            switchLanguage('zh-TW'); 
+        });
+    </script>
+</body>
+</html>
