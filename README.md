@@ -21,15 +21,16 @@
   - 深入分析不同出租车服务的特性。
   - 异常值检测与处理。
 - **主要文件**：
-  - `green_taxi_driver.py`：分析绿色出租车司机行为。
+  - `green_taxi_driver.py`：预测高小费&总收入的POI类型并返回最近坐标（面向司机）。
+  - `green_taxi_passenger.py`：预测订单的时间及价格（面向乘客）。
   - `outliers_analysis.py`：异常值分析。
 
 ### 3. 气候分析模块 (`climate`)
 - **功能**：
-  - 分析天气对出行需求的影响。
+  - 分析天气对出行需求的影响，并进行差异性检验。
   - 计算效率与成本。
 - **主要文件**：
-  - `weather_temp_visibility.py`：分析天气与能见度的关系。
+  - `weather_temp_visibility.py`：分析订单数与能见度的关系。
   - `efficiency_cost.py`：计算天气对服务效率的影响。
   - `peakhours_week.py`：分析高峰时段的天气影响。
 
