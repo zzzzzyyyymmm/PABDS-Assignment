@@ -1,0 +1,10 @@
+# Python dependencies for the project
+pandas
+numpy
+matplotlib
+seaborn
+scipy
+plotly
+geopandas
+flask
+flask-bootstrap
